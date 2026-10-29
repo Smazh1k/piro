@@ -118,7 +118,7 @@ export default function SponsorCarousel() {
     sponsors.map((sponsor) => (
       <div
         key={sponsor.name}
-        className="mx-3 flex h-40 w-[224px] shrink-0 items-center justify-center rounded-2xl border border-amber-500/20 bg-[#0b0c11] p-5 transition-colors hover:border-amber-400/50 sm:w-[280px]"
+        className="mx-3 flex h-40 w-[224px] shrink-0 items-center justify-center rounded-2xl border border-fuchsia-500/20 bg-[#0b0c11] p-5 transition-colors hover:border-fuchsia-400/50 sm:w-[280px]"
       >
         <div className="relative h-full w-full">
           <Image

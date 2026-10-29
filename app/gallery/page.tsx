@@ -51,6 +51,34 @@ const galleryImages = [
     src: "/images/gallery-12.webp",
     alt: "Scena koncertowa z niebieskim oświetleniem",
   },
+  {
+    src: "/images/gallery-13.webp",
+    alt: "Kolorowo oświetlona scena podczas wydarzenia w hali",
+  },
+  {
+    src: "/images/gallery-14.webp",
+    alt: "Scena Retro Festival skąpana w zielonym świetle",
+  },
+  {
+    src: "/images/gallery-15.webp",
+    alt: "Ring bokserski i scena oświetlone czerwonym i niebieskim światłem",
+  },
+  {
+    src: "/images/gallery-16.webp",
+    alt: "Scena plenerowa przygotowana do występu",
+  },
+  {
+    src: "/images/gallery-17.webp",
+    alt: "Koncertowa scena i publiczność w niebieskim świetle",
+  },
+  {
+    src: "/images/gallery-18.webp",
+    alt: "Konstrukcja sceniczna i ekran przygotowane do wydarzenia",
+  },
+  {
+    src: "/images/gallery-19.webp",
+    alt: "Scena z ringiem i wielobarwnymi efektami laserowymi",
+  },
 ];
 
 export default function GalleryPage() {
@@ -59,7 +87,7 @@ export default function GalleryPage() {
       <div className="mx-auto max-w-6xl">
         <div className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="mb-4 text-xs font-semibold uppercase tracking-[0.22em] text-amber-400">
+            <p className="mb-4 text-xs font-semibold uppercase tracking-[0.22em] text-fuchsia-400">
               Galeria
             </p>
             <h1 className="text-4xl font-bold sm:text-5xl">Galeria</h1>
@@ -70,7 +98,7 @@ export default function GalleryPage() {
           </div>
           <Link
             href="/contact"
-            className="inline-flex items-center gap-2 self-start rounded-xl border border-amber-500/60 px-5 py-3 text-sm font-medium text-amber-300 transition hover:bg-amber-500 hover:text-[#17100a] sm:self-auto"
+            className="inline-flex items-center gap-2 self-start rounded-xl border border-fuchsia-500/60 px-5 py-3 text-sm font-medium text-fuchsia-300 transition hover:bg-fuchsia-500 hover:text-white sm:self-auto"
           >
             Zaplanuj wydarzenie <ArrowRight size={16} aria-hidden="true" />
           </Link>
@@ -78,7 +106,7 @@ export default function GalleryPage() {
 
         <section
           aria-labelledby="gallery-video-title"
-          className="mb-10 overflow-hidden rounded-2xl border border-amber-500/20 bg-[#0b0c11]"
+          className="mb-10 overflow-hidden rounded-2xl border border-fuchsia-500/20 bg-[#0b0c11]"
         >
           <div className="flex flex-col gap-1 px-5 py-4 sm:flex-row sm:items-baseline sm:justify-between">
             <h2 id="gallery-video-title" className="font-semibold">
@@ -104,7 +132,7 @@ export default function GalleryPage() {
           {galleryImages.map((image, index) => (
             <figure
               key={image.src}
-              className={`group relative overflow-hidden rounded-xl border border-amber-500/20 ${
+              className={`group relative overflow-hidden rounded-xl border border-fuchsia-500/20 ${
                 index === 0 ? "row-span-2" : ""
               }`}
             >
