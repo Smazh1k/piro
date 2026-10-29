@@ -1,92 +1,94 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { detectSite, SiteInfo } from "@/lib/siteConfig";
-import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 
 export default function Navbar() {
-  const [site, setSite] = useState<SiteInfo | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isHidden, setIsHidden] = useState(false);
+  const lastScrollY = useRef(0);
+  const scrollDistance = useRef(0);
 
   useEffect(() => {
-    setSite(detectSite());
-  }, []);
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      const scrollDifference = currentScrollY - lastScrollY.current;
 
-  if (!site) return null;
+      if (currentScrollY < 80 || menuOpen) {
+        setIsHidden(false);
+        scrollDistance.current = 0;
+      } else if (scrollDifference !== 0) {
+        if (Math.sign(scrollDifference) !== Math.sign(scrollDistance.current)) {
+          scrollDistance.current = scrollDifference;
+        } else {
+          scrollDistance.current += scrollDifference;
+        }
+
+        if (Math.abs(scrollDistance.current) >= 3) {
+          setIsHidden(scrollDistance.current > 0);
+          scrollDistance.current = 0;
+        }
+      }
+
+      lastScrollY.current = currentScrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [menuOpen]);
 
   return (
-    <nav className="w-full flex items-center justify-between px-6 py-4 bg-[#1D3557] shadow-md relative z-50">
+    <motion.nav
+      aria-label="Nawigacja główna"
+      aria-hidden={isHidden}
+      inert={isHidden}
+      animate={{ y: isHidden ? "-100%" : "0%" }}
+      transition={{ duration: 0.16, ease: "easeOut" }}
+      className="fixed left-0 right-0 top-0 z-50 flex w-full items-center justify-between bg-transparent px-6 py-4"
+    >
       <button
-        className="text-white sm:hidden z-50"
+        className="z-50 text-amber-300 sm:hidden"
         onClick={() => setMenuOpen(!menuOpen)}
+        aria-label={menuOpen ? "Zamknij menu" : "Otwórz menu"}
+        aria-expanded={menuOpen}
       >
         {menuOpen ? <X size={26} /> : <Menu size={26} />}
       </button>
 
-      <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center justify-center gap-6 sm:gap-12">
-        <a
-          href="https://piroefekt.pl"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hover:opacity-80 transition"
-        >
-          <Image
-            src="/images/piro.png"
-            alt="PiroEfekt"
-            width={100}
-            height={30}
-            className="object-contain"
-          />
-        </a>
+      <Link
+        href="/"
+        aria-label="sceniczna.pl — strona główna"
+        className="absolute left-1/2 -translate-x-1/2 text-xl font-bold tracking-tight text-amber-300 drop-shadow-[0_0_16px_rgba(245,158,11,0.28)] transition hover:text-amber-200 sm:text-2xl"
+      >
+        sceniczna.pl
+      </Link>
 
-        <a
-          href="https://sceniczna.pl"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hover:opacity-80 transition"
-        >
-          <Image
-            src="/images/sceniczna.svg"
-            alt="Sceniczna"
-            width={140}
-            height={40}
-            className="object-contain"
-          />
-        </a>
-
-        <a
-          href="https://sceniczna.pl/fundacjarazem"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hover:opacity-80 transition"
-        >
-          <Image
-            src="/images/fund.jpg"
-            alt="Fundacja Razem"
-            width={100}
-            height={30}
-            className="object-contain"
-          />
-        </a>
-      </div>
-
-      <ul className="hidden sm:flex gap-6 text-white font-medium ml-auto">
+      <ul className="ml-auto hidden gap-6 font-medium text-amber-100 sm:flex">
         <li>
-          <Link href="/" className="hover:text-gray-300 transition">
-            Home
+          <Link href="/#o-nas" className="transition hover:text-amber-300">
+            O nas
           </Link>
         </li>
         <li>
-          <Link href="/contact" className="hover:text-gray-300 transition">
-            Contact
+          <Link href="/#uslugi" className="transition hover:text-amber-300">
+            Usługi
           </Link>
         </li>
         <li>
-          <Link href="/projects" className="hover:text-gray-300 transition">
-            Projects
+          <Link href="/#galeria" className="transition hover:text-amber-300">
+            Galeria
+          </Link>
+        </li>
+        <li>
+          <Link href="/sponsors" className="transition hover:text-amber-300">
+            Partnerzy
+          </Link>
+        </li>
+        <li>
+          <Link href="/contact" className="transition hover:text-amber-300">
+            Kontakt
           </Link>
         </li>
       </ul>
@@ -108,33 +110,47 @@ export default function Navbar() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -40 }}
               transition={{ duration: 0.3, ease: "easeOut" }}
-              className="absolute top-full left-0 w-full bg-[#1D3557] flex flex-col items-center gap-5 py-8 sm:hidden z-50 shadow-lg"
+              className="absolute top-full left-0 z-50 flex w-full flex-col items-center gap-5 border-t border-amber-500/20 bg-[#08090d]/95 py-8 shadow-lg backdrop-blur-md sm:hidden"
             >
               <Link
-                href="/"
-                className="text-white text-lg font-medium hover:text-gray-300 transition"
+                href="/#o-nas"
+                className="text-lg font-medium text-amber-100 transition hover:text-amber-300"
                 onClick={() => setMenuOpen(false)}
               >
-                Home
+                O nas
+              </Link>
+              <Link
+                href="/#uslugi"
+                className="text-lg font-medium text-amber-100 transition hover:text-amber-300"
+                onClick={() => setMenuOpen(false)}
+              >
+                Usługi
+              </Link>
+              <Link
+                href="/#galeria"
+                className="text-amber-100 text-lg font-medium transition hover:text-amber-300"
+                onClick={() => setMenuOpen(false)}
+              >
+                Galeria
+              </Link>
+              <Link
+                href="/sponsors"
+                className="text-lg font-medium text-amber-100 transition hover:text-amber-300"
+                onClick={() => setMenuOpen(false)}
+              >
+                Partnerzy
               </Link>
               <Link
                 href="/contact"
-                className="text-white text-lg font-medium hover:text-gray-300 transition"
+                className="text-amber-100 text-lg font-medium transition hover:text-amber-300"
                 onClick={() => setMenuOpen(false)}
               >
-                Contact
-              </Link>
-              <Link
-                href="/projects"
-                className="text-white text-lg font-medium hover:text-gray-300 transition"
-                onClick={() => setMenuOpen(false)}
-              >
-                Projects
+                Kontakt
               </Link>
             </motion.div>
           </>
         )}
       </AnimatePresence>
-    </nav>
+    </motion.nav>
   );
 }
