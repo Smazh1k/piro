@@ -4,7 +4,7 @@ import ServiceCards from "@/components/ServiceCards";
 
 export default function ProjectsPage() {
   return (
-    <main className="min-h-screen bg-[#08090d] px-6 pb-24 pt-32 text-white sm:px-10 lg:px-14">
+    <main className="min-h-screen px-6 pb-24 pt-32 text-white sm:px-10 lg:px-14">
       <div className="mx-auto max-w-6xl">
         <p className="mb-4 text-xs font-semibold uppercase tracking-[0.22em] text-fuchsia-400">
           Sceny. Konstrukcje. Wydarzenia.

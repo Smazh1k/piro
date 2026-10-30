@@ -83,7 +83,7 @@ const galleryImages = [
 
 export default function GalleryPage() {
   return (
-    <main className="min-h-screen bg-[#08090d] px-6 pb-20 pt-32 text-white sm:px-10 lg:px-14">
+    <main className="min-h-screen px-6 pb-20 pt-32 text-white sm:px-10 lg:px-14">
       <div className="mx-auto max-w-6xl">
         <div className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div>

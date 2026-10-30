@@ -44,7 +44,7 @@ export default function BlogPostPage() {
   }, [id]);
 
   return (
-    <article className="min-h-screen bg-[#0b0c10] px-6 py-16 text-white">
+    <article className="min-h-screen px-6 py-16 text-white">
       <div className="mx-auto max-w-3xl">
         <Link href="/blog" className="mb-8 inline-block text-blue-400 hover:underline">
           &larr; Wróć do bloga

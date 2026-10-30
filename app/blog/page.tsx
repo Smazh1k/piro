@@ -41,7 +41,7 @@ export default function BlogPage() {
   }, []);
 
   return (
-    <section className="min-h-screen bg-[#0b0c10] px-6 py-16 text-white">
+    <section className="min-h-screen px-6 py-16 text-white">
       <div className="mx-auto max-w-4xl">
         <h1 className="mb-4 text-center text-4xl font-bold">Blog</h1>
         <p className="mb-10 text-center text-gray-400">

@@ -3,7 +3,6 @@
 import { motion, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef } from "react";
 import {
   ArrowRight,
   Lightbulb,
@@ -118,47 +117,10 @@ const galleryImages = [
 ];
 
 export default function HomePage() {
-  const mainRef = useRef<HTMLElement>(null);
-  const cursorGlowRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useReducedMotion();
 
-  useEffect(() => {
-    const main = mainRef.current;
-    const glow = cursorGlowRef.current;
-    const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
-    const reducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    );
-
-    if (!main || !glow || !finePointer.matches || reducedMotion.matches) {
-      return;
-    }
-
-    const handlePointerMove = (event: PointerEvent) => {
-      if (event.pointerType !== "mouse") return;
-      glow.style.setProperty("--cursor-x", `${event.clientX}px`);
-      glow.style.setProperty("--cursor-y", `${event.clientY}px`);
-      glow.classList.add("is-visible");
-    };
-
-    const hideGlow = () => glow.classList.remove("is-visible");
-
-    main.addEventListener("pointermove", handlePointerMove);
-    main.addEventListener("pointerleave", hideGlow);
-
-    return () => {
-      main.removeEventListener("pointermove", handlePointerMove);
-      main.removeEventListener("pointerleave", hideGlow);
-    };
-  }, []);
-
   return (
-    <main ref={mainRef} className="relative isolate overflow-hidden bg-[#08090d] text-white">
-      <div
-        ref={cursorGlowRef}
-        aria-hidden="true"
-        className="home-cursor-glow"
-      />
+    <main className="relative isolate overflow-hidden bg-[#08090d] text-white">
       <HeroSection />
 
       <section

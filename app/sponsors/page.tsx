@@ -4,7 +4,7 @@ import SponsorCarousel from "@/components/SponsorCarousel";
 
 export default function SponsorsPage() {
   return (
-    <main className="bg-[#08090d] px-6 pb-24 pt-32 text-white sm:px-10 lg:px-14">
+    <main className="px-6 pb-24 pt-32 text-white sm:px-10 lg:px-14">
       <section className="mx-auto max-w-6xl">
         <div className="mb-10 max-w-2xl">
           <p className="mb-4 text-xs font-semibold uppercase tracking-[0.22em] text-fuchsia-400">

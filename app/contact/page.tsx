@@ -85,7 +85,7 @@ export default function ContactPage() {
   };
 
   return (
-    <main className="relative min-h-[calc(100svh-100px)] overflow-hidden bg-[#08090d] px-6 pb-20 pt-32 text-white sm:px-10 lg:px-14">
+    <main className="relative min-h-[calc(100svh-100px)] overflow-hidden px-6 pb-20 pt-32 text-white sm:px-10 lg:px-14">
       <div className="pointer-events-none absolute -left-40 top-20 h-96 w-96 rounded-full bg-fuchsia-500/[0.06] blur-[120px]" />
       <div className="pointer-events-none absolute -right-40 bottom-10 h-96 w-96 rounded-full bg-fuchsia-500/[0.07] blur-[120px]" />
 
