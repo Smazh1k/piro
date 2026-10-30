@@ -1,6 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import GalleryLightbox from "@/components/GalleryLightbox";
 
 const galleryImages = [
   {
@@ -128,26 +128,7 @@ export default function GalleryPage() {
           </video>
         </section>
 
-        <div className="grid auto-rows-[150px] grid-cols-2 gap-3 sm:auto-rows-[190px] sm:grid-cols-3 lg:auto-rows-[220px] lg:grid-cols-4">
-          {galleryImages.map((image, index) => (
-            <figure
-              key={image.src}
-              className={`group relative overflow-hidden rounded-xl border border-fuchsia-500/20 ${
-                index === 0 ? "row-span-2" : ""
-              }`}
-            >
-              <Image
-                src={image.src}
-                alt={image.alt}
-                fill
-                priority={index < 2}
-                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                className="object-cover transition duration-500 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-70 transition group-hover:opacity-40" />
-            </figure>
-          ))}
-        </div>
+        <GalleryLightbox images={galleryImages} />
       </div>
     </main>
   );

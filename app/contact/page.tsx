@@ -12,7 +12,13 @@ export default function ContactPage() {
     email: "",
     phone: "",
     message: "",
+    website: "",
   });
+  const [isSending, setIsSending] = useState(false);
+  const [feedback, setFeedback] = useState<{
+    type: "success" | "error";
+    message: string;
+  } | null>(null);
 
   const handleChange = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -23,16 +29,59 @@ export default function ContactPage() {
     }));
   };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const subject = encodeURIComponent(
-      `Zapytanie o wydarzenie — ${formData.name}`,
-    );
-    const body = encodeURIComponent(
-      `${formData.message}\n\nImię i nazwisko: ${formData.name}\nE-mail: ${formData.email}\nTelefon: ${formData.phone || "Nie podano"}`,
-    );
+    setIsSending(true);
+    setFeedback(null);
 
-    window.location.href = `mailto:${contactEmail}?subject=${subject}&body=${body}`;
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      const result: unknown = await response.json().catch(() => null);
+
+      if (
+        !response.ok ||
+        typeof result !== "object" ||
+        result === null ||
+        !("message" in result) ||
+        typeof result.message !== "string"
+      ) {
+        setFeedback({
+          type: "error",
+          message:
+            typeof result === "object" &&
+            result !== null &&
+            "error" in result &&
+            typeof result.error === "string"
+              ? result.error
+              : "Nie udało się wysłać wiadomości. Spróbuj ponownie później.",
+        });
+        return;
+      }
+
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        message: "",
+        website: "",
+      });
+      setFeedback({
+        type: "success",
+        message: "Dziękujemy! Wiadomość została wysłana.",
+      });
+    } catch {
+      setFeedback({
+        type: "error",
+        message:
+          "Nie udało się połączyć z serwerem. Sprawdź połączenie i spróbuj ponownie.",
+      });
+    } finally {
+      setIsSending(false);
+    }
   };
 
   return (
@@ -101,12 +150,6 @@ export default function ContactPage() {
             </div>
           </div>
 
-          <a
-            href="#formularz"
-            className="inline-flex items-center gap-5 rounded-xl bg-fuchsia-500 px-6 py-3.5 text-sm font-semibold text-white shadow-[0_0_26px_rgba(217,70,239,0.18)] transition hover:bg-fuchsia-400"
-          >
-            Skontaktuj się <ArrowRight size={17} aria-hidden="true" />
-          </a>
         </motion.section>
 
         <motion.section
@@ -121,10 +164,25 @@ export default function ContactPage() {
             Napisz do nas
           </h2>
           <p className="mb-6 text-sm text-neutral-400">
-            Wypełnij formularz, a przygotujemy wiadomość do wysłania.
+            Wypełnij formularz, a wiadomość trafi bezpośrednio do naszego zespołu.
           </p>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+            <div
+              aria-hidden="true"
+              className="absolute -left-[10000px] size-px overflow-hidden"
+            >
+              <label htmlFor="website">Pozostaw to pole puste</label>
+              <input
+                id="website"
+                type="text"
+                name="website"
+                value={formData.website}
+                onChange={handleChange}
+                tabIndex={-1}
+                autoComplete="off"
+              />
+            </div>
             <div className="grid gap-3 sm:grid-cols-2">
               <input
                 type="text"
@@ -134,6 +192,7 @@ export default function ContactPage() {
                 onChange={handleChange}
                 autoComplete="name"
                 aria-label="Imię i nazwisko"
+                maxLength={100}
                 required
                 className="min-w-0 rounded-lg border border-white/10 bg-[#08090d] px-3 py-3 text-sm text-white outline-none transition placeholder:text-neutral-500 focus:border-fuchsia-400/70"
               />
@@ -145,6 +204,7 @@ export default function ContactPage() {
                 onChange={handleChange}
                 autoComplete="email"
                 aria-label="E-mail"
+                maxLength={254}
                 required
                 className="min-w-0 rounded-lg border border-white/10 bg-[#08090d] px-3 py-3 text-sm text-white outline-none transition placeholder:text-neutral-500 focus:border-fuchsia-400/70"
               />
@@ -157,6 +217,7 @@ export default function ContactPage() {
               onChange={handleChange}
               autoComplete="tel"
               aria-label="Numer telefonu"
+              maxLength={40}
               className="rounded-lg border border-white/10 bg-[#08090d] px-3 py-3 text-sm text-white outline-none transition placeholder:text-neutral-500 focus:border-fuchsia-400/70"
             />
             <textarea
@@ -166,22 +227,46 @@ export default function ContactPage() {
               value={formData.message}
               onChange={handleChange}
               aria-label="Wiadomość"
+              minLength={10}
+              maxLength={5000}
               required
               className="resize-y rounded-lg border border-white/10 bg-[#08090d] px-3 py-3 text-sm text-white outline-none transition placeholder:text-neutral-500 focus:border-fuchsia-400/70"
             />
             <button
               type="submit"
+              disabled={isSending}
               className="mt-1 inline-flex items-center justify-center gap-3 rounded-xl border border-fuchsia-500/70 px-4 py-3.5 text-sm font-semibold text-fuchsia-400 transition hover:bg-fuchsia-500 hover:text-white"
             >
-              Wyślij wiadomość <ArrowRight size={17} aria-hidden="true" />
+              {isSending ? "Wysyłanie..." : "Wyślij wiadomość"}
+              {!isSending && <ArrowRight size={17} aria-hidden="true" />}
             </button>
+            {feedback && (
+              <p
+                role={feedback.type === "error" ? "alert" : "status"}
+                className={
+                  feedback.type === "success"
+                    ? "text-sm text-emerald-300"
+                    : "text-sm text-rose-300"
+                }
+              >
+                {feedback.message}
+              </p>
+            )}
           </form>
 
-          <p className="mt-4 flex items-start gap-2 text-xs leading-relaxed text-neutral-500">
+          <div className="mt-4 flex items-start gap-2 text-xs leading-relaxed text-neutral-500">
             <LockKeyhole className="mt-0.5 shrink-0" size={13} aria-hidden="true" />
-            Po kliknięciu otworzy się aplikacja pocztowa z przygotowaną
-            wiadomością. Sprawdź ją i wyślij.
-          </p>
+            <div className="min-w-0">
+              <p>Wiadomość zostanie wysłana bezpośrednio z formularza.</p>
+              <p className="mt-1">Możesz też napisać do nas:</p>
+              <a
+                href={`mailto:${contactEmail}`}
+                className="mt-1 inline-block break-all text-fuchsia-300 underline underline-offset-2"
+              >
+                {contactEmail}
+              </a>
+            </div>
+          </div>
         </motion.section>
       </div>
     </main>

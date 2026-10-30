@@ -118,7 +118,7 @@ export default function SponsorCarousel() {
     sponsors.map((sponsor) => (
       <div
         key={sponsor.name}
-        className="mx-3 flex h-40 w-[224px] shrink-0 items-center justify-center rounded-2xl border border-fuchsia-500/20 bg-[#0b0c11] p-5 transition-colors hover:border-fuchsia-400/50 sm:w-[280px]"
+        className="sponsor-logo-card group mx-3 flex h-40 w-[224px] shrink-0 items-center justify-center rounded-2xl border border-fuchsia-500/20 bg-[#0b0c11] p-5 sm:w-[280px]"
       >
         <div className="relative h-full w-full">
           <Image
@@ -126,7 +126,7 @@ export default function SponsorCarousel() {
             alt={sponsor.name}
             fill
             sizes="(max-width: 640px) 224px, 280px"
-            className="pointer-events-none object-contain"
+            className="sponsor-logo-card__image pointer-events-none object-contain"
             draggable={false}
           />
         </div>

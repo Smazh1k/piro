@@ -14,6 +14,21 @@ export default function Footer() {
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 overflow-hidden"
       >
+        <div className="footer-light-rig">
+          <span className="footer-light-rig__bar" />
+          <span className="footer-spotlight footer-spotlight--one">
+            <span className="footer-spotlight__beam" />
+            <span className="footer-spotlight__fixture" />
+          </span>
+          <span className="footer-spotlight footer-spotlight--two">
+            <span className="footer-spotlight__beam" />
+            <span className="footer-spotlight__fixture" />
+          </span>
+          <span className="footer-spotlight footer-spotlight--three">
+            <span className="footer-spotlight__beam" />
+            <span className="footer-spotlight__fixture" />
+          </span>
+        </div>
         <div className="absolute -bottom-32 left-[12%] size-64 rounded-full bg-fuchsia-600/10 blur-[90px]" />
         <div className="absolute -bottom-36 right-[14%] size-72 rounded-full bg-violet-600/10 blur-[100px]" />
         <span className="footer-glow-particle footer-glow-particle--one left-[18%] bg-fuchsia-300" />

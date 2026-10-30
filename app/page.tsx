@@ -1,8 +1,9 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useRef } from "react";
 import {
   ArrowRight,
   Lightbulb,
@@ -10,6 +11,7 @@ import {
   UsersRound,
 } from "lucide-react";
 import HeroSection from "@/components/HeroSection";
+import HomeAtmosphereParticles from "@/components/HomeAtmosphereParticles";
 import SponsorCarousel from "@/components/SponsorCarousel";
 import StageStructureIcon from "@/components/StageStructureIcon";
 
@@ -116,14 +118,54 @@ const galleryImages = [
 ];
 
 export default function HomePage() {
+  const mainRef = useRef<HTMLElement>(null);
+  const cursorGlowRef = useRef<HTMLDivElement>(null);
+  const prefersReducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    const main = mainRef.current;
+    const glow = cursorGlowRef.current;
+    const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const reducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    );
+
+    if (!main || !glow || !finePointer.matches || reducedMotion.matches) {
+      return;
+    }
+
+    const handlePointerMove = (event: PointerEvent) => {
+      if (event.pointerType !== "mouse") return;
+      glow.style.setProperty("--cursor-x", `${event.clientX}px`);
+      glow.style.setProperty("--cursor-y", `${event.clientY}px`);
+      glow.classList.add("is-visible");
+    };
+
+    const hideGlow = () => glow.classList.remove("is-visible");
+
+    main.addEventListener("pointermove", handlePointerMove);
+    main.addEventListener("pointerleave", hideGlow);
+
+    return () => {
+      main.removeEventListener("pointermove", handlePointerMove);
+      main.removeEventListener("pointerleave", hideGlow);
+    };
+  }, []);
+
   return (
-    <main className="overflow-hidden bg-[#08090d] text-white">
+    <main ref={mainRef} className="relative isolate overflow-hidden bg-[#08090d] text-white">
+      <div
+        ref={cursorGlowRef}
+        aria-hidden="true"
+        className="home-cursor-glow"
+      />
       <HeroSection />
 
       <section
         id="o-nas"
-        className="scroll-mt-24 border-b border-fuchsia-400/10 bg-[#08090d] px-6 py-20 sm:px-10 lg:px-14"
+        className="home-atmosphere scroll-mt-24 border-b border-fuchsia-400/10 bg-[#08090d] px-6 py-20 sm:px-10 lg:px-14"
       >
+        <HomeAtmosphereParticles />
         <div className="mx-auto grid max-w-6xl items-center gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
           <motion.div
             initial={{ opacity: 0, x: -24 }}
@@ -188,8 +230,9 @@ export default function HomePage() {
 
       <section
         id="uslugi"
-        className="scroll-mt-24 border-b border-fuchsia-400/10 bg-[#0a0b10] px-6 py-20 sm:px-10 lg:px-14"
+        className="home-atmosphere home-atmosphere--services scroll-mt-24 border-b border-fuchsia-400/10 bg-[#0a0b10] px-6 py-20 sm:px-10 lg:px-14"
       >
+        <HomeAtmosphereParticles />
         <div className="mx-auto max-w-6xl">
           <p className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-fuchsia-400">
             Nasze usługi
@@ -251,10 +294,15 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section
+      <motion.section
         id="galeria"
-        className="scroll-mt-24 border-b border-fuchsia-400/10 bg-[#08090d] px-6 py-20 sm:px-10 lg:px-14"
+        className="home-atmosphere home-atmosphere--gallery scroll-mt-24 border-b border-fuchsia-400/10 bg-[#08090d] px-6 py-20 sm:px-10 lg:px-14"
+        initial={prefersReducedMotion ? false : { opacity: 0, y: 18 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-80px" }}
+        transition={{ duration: 0.65, ease: "easeOut" }}
       >
+        <HomeAtmosphereParticles />
         <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[0.42fr_1fr] lg:items-center">
           <div>
             <p className="mb-4 text-xs font-semibold uppercase tracking-[0.22em] text-fuchsia-400">
@@ -298,9 +346,16 @@ export default function HomePage() {
             ))}
           </div>
         </div>
-      </section>
+      </motion.section>
 
-      <section className="border-b border-fuchsia-400/10 bg-[radial-gradient(ellipse_at_70%_50%,rgba(126,34,206,0.14),transparent_58%)] px-6 py-12 sm:px-10 lg:px-14">
+      <motion.section
+        className="home-atmosphere home-atmosphere--partners border-b border-fuchsia-400/10 bg-[radial-gradient(ellipse_at_70%_50%,rgba(126,34,206,0.14),transparent_58%)] px-6 py-12 sm:px-10 lg:px-14"
+        initial={prefersReducedMotion ? false : { opacity: 0, y: 18 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-80px" }}
+        transition={{ duration: 0.65, ease: "easeOut" }}
+      >
+        <HomeAtmosphereParticles />
         <div className="mx-auto flex max-w-6xl flex-col gap-8">
           <div>
             <p className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-fuchsia-400">
@@ -326,7 +381,7 @@ export default function HomePage() {
             </Link>
           </div>
         </div>
-      </section>
+      </motion.section>
     </main>
   );
 }
